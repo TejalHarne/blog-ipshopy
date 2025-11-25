@@ -29,6 +29,7 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=TejalHarne_blog-ipshopy
-            -Dsonar.organization=TejalHarne
+            -Dsonar.organization=tejalharne
+
             -Dsonar.sources=.
             -Dsonar.exclusions=node_modules/**
