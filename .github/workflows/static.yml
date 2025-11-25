@@ -28,7 +28,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # SonarCloud token
         with:
           args: >
-            -Dsonar.projectKey=aherkunal06_blog-ipshopy
-            -Dsonar.organization=aherkunal06
+            -Dsonar.projectKey=Tejal Harne_blog-ipshopy
+            -Dsonar.organization=Tejal Harne
             -Dsonar.sources=.
             -Dsonar.exclusions=node_modules/**
