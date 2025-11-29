@@ -1,35 +1,40 @@
-name: SonarCloud Scan Only
+name: Deploy Next.js App to Azure
 
 on:
   push:
-    branches: ["main", "master"]
-  pull_request:
-    branches: ["main", "master"]
+    branches:
+      - main
 
 jobs:
-  sonarcloud:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # --------------------------------------
-      # 1. CHECKOUT
-      # --------------------------------------
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0   # Required for analysis
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      # --------------------------------------
-      # 2. SONARCLOUD SCAN
-      # --------------------------------------
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # SonarCloud token
-        with:
-          args: >
-            -Dsonar.projectKey=TejalHarne_blog-ipshopy
-            -Dsonar.organization=tejalharne
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: npm
 
-            -Dsonar.sources=.
-            -Dsonar.exclusions=node_modules/**
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build App
+      run: npm run build
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+        package: .
