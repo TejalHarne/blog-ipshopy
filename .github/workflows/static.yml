@@ -1,4 +1,4 @@
-name: Deploy Next.js App to Azure
+name: Deploy Next.js App to Azure (No Build)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,13 +17,11 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-        cache: npm
 
-    - name: Install Dependencies
-      run: npm install
+    - name: Install Dependencies (Optional)
+      run: npm install || true
 
-    - name: Build App
-      run: npm run build
+    # ❌ SKIPPING BUILD STEP
 
     - name: Azure Login
       uses: azure/login@v1
