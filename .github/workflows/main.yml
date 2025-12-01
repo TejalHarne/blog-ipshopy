@@ -1,67 +1,21 @@
-name: Full CI/CD - Build, Test & Deploy to Azure
+name: Simple HTML Deploy
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: ["main"]
 
 jobs:
-  build:
-    name: Build & Test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Build Next.js (ignore errors)
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
-        run: |
-          echo "Starting build..."
-          npm run build || echo "Build errors ignored - continuing pipeline flow"
-
-      - name: Run Tests (optional)
-        run: |
-          if npm run | grep -q test; then
-            npm test || echo "Tests failed or not found"
-          else
-            echo 'No test script'
-          fi
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: next-app
-          path: .
-
   deploy:
-    name: Deploy to Azure
-    needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: next-app
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
