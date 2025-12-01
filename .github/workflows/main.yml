@@ -28,7 +28,7 @@ jobs:
           NEXT_TELEMETRY_DISABLED: 1
         run: |
           echo "Starting build..."
-          npm run build || echo "Build errors ignored - continuing pipeline"
+          npm run build || echo "Build errors ignored - continuing pipeline flow"
 
       - name: Run Tests (optional)
         run: |
